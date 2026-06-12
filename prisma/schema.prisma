@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model RawTrend {
+  id          String   @id @default(cuid())
+  source      String
+  keyword     String
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Trend {
+  id          String   @id @default(cuid())
+  source      String
+  keyword     String
+  title       String
+  description String?
+  score       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  scripts Script[]
+}
+
+model Script {
+  id        String   @id @default(cuid())
+  trendId   String
+  title     String
+  hook      String
+  content   String
+  cta       String
+  createdAt DateTime @default(now())
+
+  trend Trend @relation(fields: [trendId], references: [id])
+  scenes Scene[]
+}
+
+model Scene {
+  id          String   @id @default(cuid())
+  scriptId    String
+  order       Int
+  voiceText   String
+  visualText  String
+  captionText String
+  durationSec Int      @default(5)
+  createdAt   DateTime @default(now())
+
+  script Script @relation(fields: [scriptId], references: [id])
+  voiceAsset VoiceAsset?
+}
+
+model VoiceAsset {
+  id        String   @id @default(cuid())
+  sceneId   String   @unique
+
+  filePath  String
+  duration  Float?
+
+  createdAt DateTime @default(now())
+
+  scene Scene @relation(fields: [sceneId], references: [id])
+}

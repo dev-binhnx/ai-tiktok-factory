@@ -30,7 +30,24 @@ pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+prisma/dev.db
+prisma/dev.db-journal
+dev.db
+dev.db-journal
+
+/lib/generated/prisma
+
+storage/audio/*
+!storage/audio/.gitkeep
+
+storage/images/*
+!storage/images/.gitkeep
+
+storage/videos/*
+!storage/videos/.gitkeep
